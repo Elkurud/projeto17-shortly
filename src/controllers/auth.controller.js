@@ -11,16 +11,16 @@ export async function signUp(req, res) {
         if( password !== confirmPassword ) return res.sendStatus(422)
 
         const isRegistered = await db.query(` 
-            SELECT * FROM users WHERE email = $1
+            SELECT * FROM users WHERE users.email=$1;
         `, [email])
 
-        if (isRegistered.rowCount > 0) return res.sendStatus(409)
+        if (isRegistered.rows.length > 0) return res.sendStatus(409)
 
         const hash = bcrypt.hashSync(password, 10)
 
         await db.query(`
             INSERT INTO users (name, email, password)
-            VALUES ($1, $2, $3)
+            VALUES ($1, $2, $3);
         ` [name, email, hash])
 
         res.senStatus(201)
