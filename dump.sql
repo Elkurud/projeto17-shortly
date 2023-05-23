@@ -62,7 +62,8 @@ CREATE TABLE public.shortened (
     url text NOT NULL,
     "shortenedUrl" text NOT NULL,
     "userId" integer NOT NULL,
-    "createdAt" timestamp without time zone DEFAULT now() NOT NULL
+    "createdAt" timestamp without time zone DEFAULT now() NOT NULL,
+    "visitCount" integer DEFAULT 0 NOT NULL
 );
 
 
@@ -144,39 +145,44 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.sessions VALUES (1, '5310e80d-e9d6-4c9f-9e16-c369518c80dd', true, 1, '2023-05-23 13:11:17.636191');
+INSERT INTO public.sessions VALUES (2, '9b8939a1-a1ab-4698-a84a-25a3e8821862', true, 1, '2023-05-23 13:13:07.534151');
+INSERT INTO public.sessions VALUES (3, '0759c37e-99bd-42c7-9d3a-4bc3b45077fd', true, 1, '2023-05-23 13:13:36.548523');
 
 
 --
 -- Data for Name: shortened; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.shortened VALUES (5, 'https://www.youtube.com/watch?v=t2S3qEGcAJo', 'I5jie7hq', 1, '2023-05-23 14:03:09.841277', 0);
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.users VALUES (1, 'joao@driven.com.br', '$2b$10$XDxX7e0PfOcD3ztmDIKCe.cuknpxa67oLcG/ETJsvV7HthvG4b4A6', 'João', '2023-05-23 12:51:30.138273');
 
 
 --
 -- Name: sessions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.sessions_id_seq', 1, false);
+SELECT pg_catalog.setval('public.sessions_id_seq', 3, true);
 
 
 --
 -- Name: shortened_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.shortened_id_seq', 1, false);
+SELECT pg_catalog.setval('public.shortened_id_seq', 5, true);
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 1, false);
+SELECT pg_catalog.setval('public.users_id_seq', 1, true);
 
 
 --
