@@ -72,7 +72,6 @@ export async function deleteShortUrl(req, res) {
     const { user } = res.locals
 
     try {
-        console.log(req.locals)
 
         const result = await db.query(`
             SELECT * FROM shortened WHERE id=$1
