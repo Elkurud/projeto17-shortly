@@ -21,9 +21,9 @@ export async function signUp(req, res) {
         await db.query(`
             INSERT INTO users (name, email, password)
             VALUES ($1, $2, $3);
-        ` [name, email, hash])
+        `, [name, email, hash])
 
-        res.senStatus(201)
+        res.sendStatus(201)
 
     } catch (err) {
         res.status(500).send(err.message)
@@ -35,15 +35,19 @@ export async function signIn(req, res) {
     const { email, password } = req.body
 
     try {
-        const user = await db.collection("users").findOne({ email })
-        if (!user) return res.status(401).send("email nao cadastrado")
+        const {rows: user} = await db.query(` 
+        SELECT * FROM users WHERE users.email=$1;
+    `, [email])
+        if (!user[0]) return res.status(401).send("email nao cadastrado")
 
-        const isPasswordCorrect = bcrypt.compareSync(password, user.password)
+        const isPasswordCorrect = bcrypt.compareSync(password, user[0].password)
         if (!isPasswordCorrect) return res.status(401).send("senha incorreta")
 
         const token = uuid()
-        await db.collection("sessions").insertOne({ token, userId: user._id })
-        res.send({ token, userName: user.name, image: user.image })
+        await db.query(`
+            INSERT INTO sessions (token, "userId") VALUES ($1, $2)
+        `, [token, user[0].id])
+        res.status(200).send({ token })
     } catch (err) {
         res.status(500).send(err.message)
     }
@@ -57,11 +61,6 @@ export async function signOut(req, res) {
 
     try {
 
-        const sessions = await db.collection("sessions").findOne({ token })
-        if (!sessions) return res.sendStatus(401)
-
-        await db.collection("sessions").deleteOne({ token })
-        res.sendStatus(200)
 
     } catch (err) {
         res.status(500).send(err.message)
